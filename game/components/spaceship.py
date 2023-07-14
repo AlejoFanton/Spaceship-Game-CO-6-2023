@@ -17,31 +17,37 @@ class Spaceship:
     def update(self, game_speed, user_input):
         if user_input[pygame.K_LEFT]:
             self.move_left(game_speed)
-
-        if user_input[pygame.K_RIGHT]:
+        elif user_input[pygame.K_RIGHT]:
             self.move_rigth(game_speed)
 
         if user_input[pygame.K_UP]:
             self.move_up(game_speed)
-            
-        if user_input[pygame.K_DOWN]:
+        elif user_input[pygame.K_DOWN]:
             self.move_down(game_speed)
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
     def move_left(self, game_speed):
-        if self.rect.left > 0:
-            self.rect.x -= game_speed
+        self.rect.x -= game_speed
+        self.display_limit()
 
     def move_rigth(self, game_speed):
-        if self.rect.right < SCREEN_WIDTH:
+        #if self.rect.right > SCREEN_WIDTH:
             self.rect.x += game_speed
+            self.display_limit()
     
     def move_up(self, game_speed):
-        if self.rect.top:
+        if self.rect.y > SCREEN_HEIGHT // 2:
             self.rect.y -= game_speed
     
     def move_down(self, game_speed):
-        if self.rect.bottom < SCREEN_HEIGHT:
+        if self.rect.bottom < SCREEN_HEIGHT - self.HEIGHT:
             self.rect.y += game_speed
+
+    #Primera tarea
+    def display_limit(self):
+        if self.rect.x < 0: # Limite izquierdo
+            self.rect.x = SCREEN_WIDTH # Reaparece lado derecho
+        elif self.rect.x > SCREEN_WIDTH: # Reaparece lado izquierdo
+            self.rect.x = 0 # Limite derecho
