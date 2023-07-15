@@ -19,8 +19,7 @@ class Spaceship:
             self.move_left(game_speed)
         elif user_input[pygame.K_RIGHT]:
             self.move_rigth(game_speed)
-
-        if user_input[pygame.K_UP]:
+        elif user_input[pygame.K_UP]:
             self.move_up(game_speed)
         elif user_input[pygame.K_DOWN]:
             self.move_down(game_speed)
@@ -33,9 +32,8 @@ class Spaceship:
         self.display_limit()
 
     def move_rigth(self, game_speed):
-        #if self.rect.right > SCREEN_WIDTH:
-            self.rect.x += game_speed
-            self.display_limit()
+        self.rect.x += game_speed
+        self.display_limit()
     
     def move_up(self, game_speed):
         if self.rect.y > SCREEN_HEIGHT // 2:
@@ -49,5 +47,5 @@ class Spaceship:
     def display_limit(self):
         if self.rect.x < 0: # Limite izquierdo
             self.rect.x = SCREEN_WIDTH # Reaparece lado derecho
-        elif self.rect.x > SCREEN_WIDTH: # Reaparece lado izquierdo
-            self.rect.x = 0 # Limite derecho
+        elif self.rect.x > SCREEN_WIDTH: 
+            self.rect.x = 0
