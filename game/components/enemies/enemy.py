@@ -1,19 +1,20 @@
 import random
 from game.utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT, LEFT, RIGTH
 
-class Enemy:
+class Enemy():
+    X_POS_LIST = [i for i in range(10,SCREEN_WIDTH,50)]
     Y_POS = 0
     SPEED_Y = 2
     SPEED_X = 5
-    MOV_X = [LEFT, RIGTH]
+    MOVEMENTS = [LEFT, RIGTH]
     INTERVAL = 100
 
     def __init__(self, image):
         self.image = image
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(image.get_width(), SCREEN_WIDTH - image.get_width())
+        self.rect.x = random.choice(self.X_POS_LIST)
         self.rect.y = self.Y_POS
-        self.mov_x = random.choice(self.MOV_X)
+        self.mov_x = random.choice(self.MOVEMENTS)
         self.index =0
         self.is_visible = True
 
@@ -33,6 +34,14 @@ class Enemy:
             if self.index > self.INTERVAL or self.rect.x <= 0:
                 self.mov_x = RIGTH
                 self.index = 0
+        elif self.mov_x == self.MOVEMENTS:            
+            self.rect.y += self.SPEED_Y
+            if self.index > self.INTERVAL or self.rect.x <= 0:
+                self.rect.y -= self.SPEED_Y
+                self.index = 0                
+        elif self.mov_x == self.MOVEMENTS:
+            if self.rect.y <= 0 or self.rect.y >= SCREEN_HEIGHT - self.rect.height:
+                self.SPEED_Y = -self.SPEED_Y
         else:
             self.rect.x += self.SPEED_X
             if  self.index > self.INTERVAL or self.rect.x >= SCREEN_WIDTH - self.rect.width:
