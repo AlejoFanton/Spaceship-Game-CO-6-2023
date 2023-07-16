@@ -31,6 +31,8 @@ ENEMY_3 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/enemy_3.png"))
 ENEMY_4 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/droid.png"))
 ENEMY_5 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/enemy_5.png"))
 
+WHITE_COLOR = (255, 255, 255)
+BLACK_COLOR = (0, 0, 0)
 
 FONT_STYLE = 'freesansbold.ttf'
 

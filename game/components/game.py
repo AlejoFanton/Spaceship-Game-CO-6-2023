@@ -13,11 +13,11 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.playing = False
+        self.player = Spaceship()
+        self.enemy_handler = EnemyHandler()
         self.game_speed = 10
         self.x_pos_bg = 0
         self.y_pos_bg = 0
-        self.player = Spaceship()
-        self.enemy_handler = EnemyHandler()
 
     def run(self):
         # Game loop: events - update - draw

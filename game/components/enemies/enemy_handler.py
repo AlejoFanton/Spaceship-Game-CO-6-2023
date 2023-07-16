@@ -1,12 +1,18 @@
 from game.components.enemies.ship import Ship
-from game.components.enemies.ovni import ShipOvni
-from game.components.enemies.hunter import ShipHunter
+from game.components.enemies.ship_ovni import ShipOvni
+from game.components.enemies.ship_hunter import ShipHunter
 from game.components.enemies.enemy_3 import ShipEnemy3
 from game.components.enemies.enemy_5 import ShipEnemy5
 
 class EnemyHandler:
     def __init__(self):
         self.enemies = []
+        self.number_enemy_destroyed = 0
+        self.timer = 0
+        self.delay = 200
+        self.min_enemies = 3
+        self.max_enemies = 3
+        self.available_ships = [Ship]
 
     def update(self):
         self.add_enemy()
