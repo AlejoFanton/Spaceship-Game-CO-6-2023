@@ -11,9 +11,14 @@ IMG_DIR = os.path.join(os.path.dirname(__file__), "..", "assets")
 # Assets Constants
 ICON = pygame.image.load(os.path.join(IMG_DIR, "Spaceship/spaceship.png"))
 
+
 SHIELD = pygame.image.load(os.path.join(IMG_DIR, 'Other/shield.png'))
 
 BG = pygame.image.load(os.path.join(IMG_DIR, 'Other/Track.png'))
+WP_1 = pygame.image.load(os.path.join(IMG_DIR, 'Wallpaper/galaxy.png'))
+WP_2 = pygame.image.load(os.path.join(IMG_DIR, 'Wallpaper/galaxy_2.png'))
+WP_3 = pygame.image.load(os.path.join(IMG_DIR, 'Wallpaper/planet.png'))
+WP_4 = pygame.image.load(os.path.join(IMG_DIR, 'Wallpaper/planet_2.png'))
 
 HEART = pygame.image.load(os.path.join(IMG_DIR, 'Other/SmallHeart.png'))
 
