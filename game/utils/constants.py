@@ -25,11 +25,11 @@ SPACESHIP_SHIELD = pygame.image.load(os.path.join(IMG_DIR, "Spaceship/spaceship_
 BULLET = pygame.image.load(os.path.join(IMG_DIR, "Bullet/bullet_1.png"))
 
 BULLET_ENEMY = pygame.image.load(os.path.join(IMG_DIR, "Bullet/bullet_2.png"))
-ENEMY_1 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/enemy_1.png"))
+ENEMY_1 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/hunter.png"))
 ENEMY_2 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/ovni.png"))
-ENEMY_3 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/enemy_3.png"))
+ENEMY_3 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/galactic.png"))
 ENEMY_4 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/droid.png"))
-ENEMY_5 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/enemy_5.png"))
+ENEMY_5 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/stellar.png"))
 
 WHITE_COLOR = (255, 255, 255)
 BLACK_COLOR = (0, 0, 0)
@@ -38,3 +38,5 @@ FONT_STYLE = 'freesansbold.ttf'
 
 LEFT = 'left'
 RIGTH = 'rigth'
+DIAGONAL = "diagonal"
+BOUNCE = "bounce"

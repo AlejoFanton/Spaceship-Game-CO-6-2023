@@ -1,18 +1,25 @@
+import random
+
 from game.components.enemies.ship import Ship
 from game.components.enemies.ship_ovni import ShipOvni
-from game.components.enemies.ship_hunter import ShipHunter
-from game.components.enemies.enemy_3 import ShipEnemy3
-from game.components.enemies.enemy_5 import ShipEnemy5
+from game.components.enemies.ship_galactic import ShipGalactic
+from game.components.enemies.ship_droid import ShipDroid
+from game.components.enemies.ship_stellar import ShipStellar
+
 
 class EnemyHandler:
     def __init__(self):
         self.enemies = []
-        self.number_enemy_destroyed = 0
         self.timer = 0
         self.delay = 200
         self.min_enemies = 3
-        self.max_enemies = 3
+        self.max_enemies = 5
         self.available_ships = [Ship]
+        self.current_level = 1
+        self.is_countdown_active = False
+        self.countdown_timer = 0
+        self.countdown_duration = 3000
+
 
     def update(self):
         self.add_enemy()
@@ -26,16 +33,39 @@ class EnemyHandler:
             enemy.draw(screen)
 
     def add_enemy(self):
+        
         if len(self.enemies) < 3:
             self.enemies.append(Ship())
         if len(self.enemies) < 3:
             self.enemies.append(ShipOvni())
         if len(self.enemies) < 3:
-            self.enemies.append(ShipHunter())
+            self.enemies.append(ShipGalactic())
         if len(self.enemies) < 5:
-            self.enemies.append(ShipEnemy3())
+            self.enemies.append(ShipDroid())
         if len(self.enemies) < 5:
-            self.enemies.append(ShipEnemy5())
-
+            self.enemies.append(ShipStellar())
+       
+        
+        ship_type = random.choice(self.available_ships)
+        enemy = ship_type()
+        if len(self.enemies) < self.min_enemies:
+            self.enemies.append(enemy)
+        
     def remove_enemy(self, enemy):
         self.enemies.remove(enemy)
+    
+    def increase_level(self):
+        self.current_level += 1
+        if self.current_level == 2:
+            self.available_ships = [Ship, ShipOvni]
+        elif self.current_level == 3:
+            self.available_ships = [Ship, ShipOvni, ShipGalactic]
+        elif self.current_level == 4:
+            self.available_ships = [Ship, ShipOvni, ShipGalactic, ShipDroid]
+        elif self.current_level == 5:
+            self.available_ships = [Ship, ShipOvni, ShipGalactic, ShipDroid, ShipStellar]
+        elif self.current_level == 6:
+            self.available_ships = [Ship, ShipOvni, ShipGalactic, ShipDroid, ShipStellar]
+        else:
+            if self.current_level > 6:
+                self.available_ships = [Ship, ShipOvni, ShipGalactic, ShipDroid, ShipStellar]
