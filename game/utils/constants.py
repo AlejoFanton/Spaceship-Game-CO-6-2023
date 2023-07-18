@@ -45,3 +45,5 @@ LEFT = 'left'
 RIGTH = 'rigth'
 DIAGONAL = "diagonal"
 BOUNCE = "bounce"
+
+BULLET_ENEMY_TYPE = 'enemy'

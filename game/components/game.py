@@ -5,7 +5,7 @@ from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, F
 from game.utils.constants import WP_1, WP_2, WP_3, WP_4
 from game.components.spaceship import Spaceship
 from game.components.enemies.enemy_handler import EnemyHandler
-
+from game.components.Bullets.bullet_handler import BulletHandler
 
 class Game:
     def __init__(self):
@@ -17,6 +17,7 @@ class Game:
         self.playing = False
         self.player = Spaceship()
         self.enemy_handler = EnemyHandler()
+        self.bullet_handler = BulletHandler()
         self.game_speed = 10
         self.x_pos_bg = 0
         self.y_pos_bg = 0
@@ -46,7 +47,12 @@ class Game:
     def update(self):
         user_input = pygame.key.get_pressed()
         self.player.update(self.game_speed, user_input)
-        self.enemy_handler.update()
+        self.enemy_handler.update(self.bullet_handler)
+        self.bullet_handler.update(self.player)
+        if not self.player.is_alive:
+            pygame.time.delay(300)
+            self.playing = False
+
         
         for i in range(len(self.wp_positions)):
             self.wp_positions[i] = (self.wp_positions[i][0], self.wp_positions[i][1] + self.wp_speed)
@@ -59,6 +65,7 @@ class Game:
         self.draw_background()
         self.player.draw(self.screen)
         self.enemy_handler.draw(self.screen)
+        self.bullet_handler.draw(self.screen)
         pygame.display.update()
         pygame.display.flip()
 
