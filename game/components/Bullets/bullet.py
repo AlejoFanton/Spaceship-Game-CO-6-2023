@@ -1,8 +1,10 @@
 class Bullet:
-    def __init__(self, image, center):
+    def __init__(self, image, type, center):
         self.image = image
+        self.type = type
         self.rect = self.image.get_rect()
         self.rect.center = center
+        self.is_alive = True
 
     def update(self, object):
         if self.rect.colliderect(object.rect):

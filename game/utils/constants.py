@@ -47,3 +47,4 @@ DIAGONAL = "diagonal"
 BOUNCE = "bounce"
 
 BULLET_ENEMY_TYPE = 'enemy'
+BULLET_PLAYER_TYPE = 'ship'
