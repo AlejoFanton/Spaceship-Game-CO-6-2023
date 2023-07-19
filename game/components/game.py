@@ -31,7 +31,9 @@ class Game:
         ]
         self.wp_speed = self.game_speed
         self.score = 0
+        self.max_score = 0
         self.number_death = 0
+        self.number_attempts = 0
 
     def run(self):
         # Game loop: events - update - draw
@@ -51,6 +53,7 @@ class Game:
                 self.reset()
                 self.playing = True
                 self.number_death += 1
+                self.number_attempts += 1
 
     def update(self):
         if self.playing:
@@ -59,6 +62,8 @@ class Game:
             self.enemy_handler.update(self.bullet_handler)
             self.bullet_handler.update(self.player, self.enemy_handler.enemies)
             self.score = self.enemy_handler.enemies_destroyed
+            if self.score > self.max_score:
+                self.max_score = self.score
             if not self.player.is_alive:
                 pygame.time.delay(300)
                 self.playing = False
@@ -109,9 +114,13 @@ class Game:
             self.screen.blit(text, text_rect)
         else:
             text, text_rect = text_utils.get_message('Press any key to Restart', 30, WHITE)
-            score, score_rect = text_utils.get_message(f'Your score is: {self.score}', 30, WHITE, height=SCREEN_HEIGHT//2 +50)
+            score, score_rect = text_utils.get_message(f'Your score is: {self.score}', 30, WHITE, height=SCREEN_HEIGHT // 2 + 50)
+            max_score, max_score_rect = text_utils.get_message(f'Max score: {self.max_score}', 30, WHITE, height=SCREEN_HEIGHT // 2 + 80)
+            attempts, attempts_rect = text_utils.get_message(f'Attempts: {self.number_attempts}', 30, WHITE, height=SCREEN_HEIGHT // 2 + 110)
             self.screen.blit(text, text_rect)
             self.screen.blit(score, score_rect)
+            self.screen.blit(max_score, max_score_rect)
+            self.screen.blit(attempts, attempts_rect)
 
     def draw_score(self):
         score, score_rect = text_utils.get_message(f'Your score is: {self.score}', 20, WHITE, 1000, 40)
