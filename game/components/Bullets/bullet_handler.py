@@ -1,11 +1,13 @@
 from game.utils.constants import BULLET_ENEMY_TYPE, BULLET_PLAYER_TYPE
 from game.components.Bullets.bullet_enemy import BulletEnemy
 from game.components.Bullets.bullet_spaceship import BulletSpaceship
+from game.components.help.lifes import Life
 
 
 class BulletHandler:
     def __init__(self):
         self.bullets = []
+        self.live = Life()
 
     def update(self, player, enemies):
         for bullet in self.bullets:

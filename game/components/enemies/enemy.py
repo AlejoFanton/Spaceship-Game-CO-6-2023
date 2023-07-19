@@ -1,59 +1,62 @@
 import random
-from game.utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT, LEFT, RIGTH, DIAGONAL, BOUNCE, BULLET_ENEMY_TYPE
+from game.utils.constants import SCREEN_WIDTH, SCREEN_HEIGHT, BULLET_ENEMY_TYPE
 
-class Enemy():
-    X_POS_LIST = [i for i in range(10,SCREEN_WIDTH,50)]
-    Y_POS = 0
-    SPEED_Y = 2
-    SPEED_X = 5
-    MOVEMENTS = [LEFT, RIGTH, DIAGONAL, BOUNCE]
+class Enemy:
+    X_POS_LIST = [i for i in range(50,SCREEN_WIDTH,50)]
+    Y_POS = 20
+    LEFT = "left"
+    RIGHT = "right"
+    DIAGONAL = "diagonal"
+    BOUNCE = "bounce"
+    MOVEMENTS = [LEFT,RIGHT,DIAGONAL,BOUNCE]
     INTERVAL = 100
     SHOOTING_TIME = 30
 
-    def __init__(self, image):
+    def __init__(self, image,speed_x,speed_y):
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.x = random.choice(self.X_POS_LIST)
         self.rect.y = self.Y_POS
-        self.mov_x = random.choice(self.MOVEMENTS)
-        self.index =0
+        self.mov = random.choice(self.MOVEMENTS)
+        self.index = 0
+        self.speed_x = speed_x
+        self.speed_y = speed_y
+        self.is_alive = True
         self.is_destroyed = False
         self.shooting_time = 0
-        self.is_visible = True
-        self.is_alive = True
 
     def update(self, bullet_handler):
-        self.index += 1
+        if self.rect.y >= SCREEN_HEIGHT:
+            self.is_alive = False
         self.shooting_time += 1
         self.move()
         self.shoot(bullet_handler)
-        if self.rect.y >= SCREEN_HEIGHT:
-            self.is_visible = False
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
     def move(self):
-        self.rect.y += self.SPEED_Y
-        if self.mov_x == LEFT:
-            self.rect.x -= self.SPEED_X
+        self.rect.y += self.speed_y
+        if self.mov == self.LEFT:
+            self.rect.x -= self.speed_x
             if self.index > self.INTERVAL or self.rect.x <= 0:
-                self.mov_x = RIGTH
+                self.mov = self.RIGHT
                 self.index = 0
-        elif self.mov_x == self.MOVEMENTS:            
-            self.rect.y += self.SPEED_Y
+        elif self.mov == self.DIAGONAL:            
+            self.rect.y += self.speed_y
             if self.index > self.INTERVAL or self.rect.x <= 0:
-                self.rect.y -= self.SPEED_Y
+                self.rect.y -= self.speed_y
                 self.index = 0                
-        elif self.mov_x == self.MOVEMENTS:
+        elif self.mov == self.BOUNCE:
             if self.rect.y <= 0 or self.rect.y >= SCREEN_HEIGHT - self.rect.height:
-                self.SPEED_Y -= self.SPEED_Y
+                self.speed_y = -self.speed_y
         else:
-            self.rect.x += self.SPEED_X
-            if  self.index > self.INTERVAL or self.rect.x >= SCREEN_WIDTH - self.rect.width:
-                self.mov_x = LEFT
+            self.rect.x += self.speed_x
+            if self.index > self.INTERVAL or self.rect.x >= SCREEN_WIDTH - self.rect.width:
+                self.mov = self.LEFT
                 self.index = 0
-    
+        self.index += 1
+
     def shoot(self, bullet_handler):
         if self.shooting_time % self.SHOOTING_TIME == 0:
             bullet_handler.add_bullet(BULLET_ENEMY_TYPE, self.rect.center)

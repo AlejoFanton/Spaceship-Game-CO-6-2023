@@ -1,71 +1,72 @@
 import random
-import time
+import pygame
 
 from game.components.enemies.ship import Ship
 from game.components.enemies.ship_ovni import ShipOvni
 from game.components.enemies.ship_galactic import ShipGalactic
 from game.components.enemies.ship_droid import ShipDroid
 from game.components.enemies.ship_stellar import ShipStellar
-from game.components.enemies.enemy import Enemy
+from game.utils.constants import WHITE
+from game.utils import text_utils
 
 
 class EnemyHandler:
+    
     def __init__(self):
         self.enemies = []
-        self.enemies_destroyed = 0
+        self.number_enemy_destroyed = 0
         self.timer = 0
         self.delay = 200
         self.min_enemies = 3
-        self.max_enemies = 5
+        self.max_enemies = 3
         self.available_ships = [Ship]
         self.current_level = 1
         self.is_countdown_active = False
         self.countdown_timer = 0
         self.countdown_duration = 3000
-        self.last_enemy_time = time.time()
-        
-
 
     def update(self, bullet_handler):
+        self.timer += 1
         self.add_enemy()
+        if self.timer >= self.delay and self.min_enemies <= self.max_enemies:
+            self.min_enemies += 1
+            self.timer = 0
         for enemy in self.enemies:
             enemy.update(bullet_handler)
-            if not enemy.is_visible or not enemy.is_alive:
-                self.remove_enemy(enemy)
             if not enemy.is_alive:
-                self.enemies_destroyed += 1
                 self.number_enemy_destroyed += 1
-
+                self.remove_enemy(enemy)
+        if self.is_countdown_active:
+            pygame.time.wait(self.countdown_duration)
+            self.countdown_timer -= pygame.time.get_ticks() + 3000
+            if self.countdown_timer <= 0:
+                self.is_countdown_active = False   
+                self.countdown_timer = 0         
+        if self.number_enemy_destroyed == self.max_enemies:
+            self.increase_level() 
+            self.is_countdown_active = True
+            self.max_enemies += 4
 
     def draw(self, screen):
         for enemy in self.enemies:
             enemy.draw(screen)
+        if self.is_countdown_active:
+            countdown_seconds = int(self.countdown_duration / 1000)
+            text, text_rect = text_utils.get_message(f"Next level in {countdown_seconds} seconds", 40, WHITE)
+            screen.blit(text,text_rect)
+                
 
     def add_enemy(self):
-        
-        if len(self.enemies) < 3:
-            self.enemies.append(Ship())
-        if len(self.enemies) < 3:
-            self.enemies.append(ShipOvni())
-        if len(self.enemies) < 3:
-            self.enemies.append(ShipGalactic())
-        if len(self.enemies) < 5:
-            self.enemies.append(ShipDroid())
-        if len(self.enemies) < 5:
-            self.enemies.append(ShipStellar())
-       
-        
         ship_type = random.choice(self.available_ships)
         enemy = ship_type()
         if len(self.enemies) < self.min_enemies:
             self.enemies.append(enemy)
-        
+
     def remove_enemy(self, enemy):
         self.enemies.remove(enemy)
     
     def reset(self):
         self.enemies = []
-        self.enemies_destroyed = 0
         self.number_enemy_destroyed = 0
         self.min_enemies = 3
         self.max_enemies = 3
