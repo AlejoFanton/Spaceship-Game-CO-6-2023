@@ -18,3 +18,5 @@ class BulletSpaceship(Bullet):
         if self.rect.y <= 0:
             self.is_alive = False
         super().update(enemy)
+        if not self.is_alive:
+            enemy.is_destroyed = True

@@ -17,8 +17,10 @@ class Enemy():
         self.rect.y = self.Y_POS
         self.mov_x = random.choice(self.MOVEMENTS)
         self.index =0
+        self.is_destroyed = False
         self.shooting_time = 0
         self.is_visible = True
+        self.is_alive = True
 
     def update(self, bullet_handler):
         self.index += 1

@@ -12,6 +12,7 @@ from game.components.enemies.enemy import Enemy
 class EnemyHandler:
     def __init__(self):
         self.enemies = []
+        self.enemies_destroyed = 0
         self.timer = 0
         self.delay = 200
         self.min_enemies = 3
@@ -22,14 +23,19 @@ class EnemyHandler:
         self.countdown_timer = 0
         self.countdown_duration = 3000
         self.last_enemy_time = time.time()
+        
 
 
     def update(self, bullet_handler):
         self.add_enemy()
         for enemy in self.enemies:
             enemy.update(bullet_handler)
-            if not enemy.is_visible:
+            if not enemy.is_visible or not enemy.is_alive:
                 self.remove_enemy(enemy)
+            if not enemy.is_alive:
+                self.enemies_destroyed += 1
+                self.number_enemy_destroyed += 1
+
 
     def draw(self, screen):
         for enemy in self.enemies:
@@ -57,6 +63,16 @@ class EnemyHandler:
     def remove_enemy(self, enemy):
         self.enemies.remove(enemy)
     
+    def reset(self):
+        self.enemies = []
+        self.enemies_destroyed = 0
+        self.number_enemy_destroyed = 0
+        self.min_enemies = 3
+        self.max_enemies = 3
+        self.available_ships = [Ship]
+        self.current_level = 1
+        self.countdown_timer = 0
+    
     def increase_level(self):
         self.current_level += 1
         if self.current_level == 2:
@@ -72,3 +88,5 @@ class EnemyHandler:
         else:
             if self.current_level > 6:
                 self.available_ships = [Ship, ShipOvni, ShipGalactic, ShipDroid, ShipStellar]
+    
+    
