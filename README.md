@@ -12,6 +12,13 @@ Interstellar Ship: Saving the Galaxy is a 2D space defense arcade game built wit
 
 [![Interstellar-Ship-Saving-the-Galaxy-3.png](https://i.postimg.cc/Mptz2K5k/Interstellar-Ship-Saving-the-Galaxy-3.png)](https://postimg.cc/xXkwLQBg)
 
+## Controls
+
+- Left and right arrows: Move the spacecraft left and right.
+
+- Up and down arrows: Move the spacecraft up and down.
+
+- Space bar: Shoot bullets from the spacecraft.
 
 ## Features
 
