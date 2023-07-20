@@ -52,7 +52,7 @@ class EnemyHandler:
             enemy.draw(screen)
         if self.is_countdown_active:
             countdown_seconds = int(self.countdown_duration / 1000)
-            text, text_rect = text_utils.get_message(f"Next level in {countdown_seconds} seconds", 40, WHITE)
+            text, text_rect = text_utils.get_message(f"El proximo nivel comenzara en: {countdown_seconds} seconds", 40, WHITE)
             screen.blit(text,text_rect)
                 
 

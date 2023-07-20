@@ -1,14 +1,15 @@
 import pygame
 import random
+import pygame.locals as pygame_locals
 
 from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
-from game.utils.constants import WP_1, WP_2, WP_3, WP_4, WHITE
+from game.utils.constants import WP_1, WP_2, WP_3, WP_4, WHITE, BGSTART, START, BLACK
 from game.components.spaceship import Spaceship
 from game.components.enemies.enemy_handler import EnemyHandler
 from game.components.Bullets.bullet_handler import BulletHandler
 from game.components.levels.levels_handler import LevelHandler
 from game.utils import text_utils
-from game.components.power.power_handler import PowerHandled
+from game.components.power_ups.power_up_handler import PowerUpHandler
 from game.components.help.lifes import Life
 
 class Game:
@@ -31,7 +32,7 @@ class Game:
         self.max_score = 0
         self.power_type = DEFAULT_TYPE
         self.power_time = 0
-        self.power_handled = PowerHandled()
+        self.power_up_handler = PowerUpHandler()
         self.level_handler = LevelHandler()
         self.time_next_level = 0
         self.enemies_nex_level = 3
@@ -44,6 +45,11 @@ class Game:
         ]
         self.wp_speed = self.game_speed
         self.max_level_reached = 0
+        self.bg = pygame.transform.scale(BG, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.bg_start = pygame.transform.scale(BGSTART, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.show_start_menu = True
+        self.game_started = False
+        self.game_over = False
 
     def run(self):
         # Game loop: events - update - draw
@@ -64,9 +70,13 @@ class Game:
                 if not self.playing:
                     if event.key == pygame.K_RETURN:
                         self.playing = True
+                        self.game_started = True  # El juego ha comenzado
                         self.reset()
-                        self.playing = True
-                        self.number_death += 1
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if not self.playing and event.button == 1:  # 1: Left mouse button
+                    self.playing = True
+                    self.game_started = True  # El juego ha comenzado
+                    self.reset()
 
     def update(self):
         if self.playing:
@@ -74,8 +84,8 @@ class Game:
             self.player.update(self.game_speed, user_input, self.bullet_handler)
             self.enemy_handler.update(self.bullet_handler)
             self.bullet_handler.update(self.player, self.enemy_handler.enemies)
+            self.power_up_handler.update(self.player)
             self.score = self.enemy_handler.number_enemy_destroyed
-            self.power_handled.update(self.player)
             
             if self.level_handler.is_level_completed():  # Cambiar aquí (corregir nombre del método)
                 self.is_countdown_active = True
@@ -108,7 +118,7 @@ class Game:
             self.player.draw(self.screen)
             self.enemy_handler.draw(self.screen)
             self.bullet_handler.draw(self.screen)
-            self.power_handled.draw(self.screen)
+            self.power_up_handler.draw(self.screen)
             self.draw_score()
             self.draw_level()
             self.draw_power_time()
@@ -120,14 +130,20 @@ class Game:
         pygame.display.flip()
 
     def draw_background(self):
-        image = pygame.transform.scale(BG, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        image_height = image.get_height()
-        self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg))
-        self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
-        if self.y_pos_bg >= SCREEN_HEIGHT:
-            self.screen.blit(image, (self.x_pos_bg, self.y_pos_bg - image_height))
-            self.y_pos_bg = 0
-        self.y_pos_bg += self.game_speed
+        self.screen.fill(BLACK)  # Llenar pantalla con color negro
+        if not self.game_started:  # Si el juego no ha comenzado
+            if self.show_start_menu:
+                self.screen.blit(self.bg_start, (0, 0))
+            else:
+                image_height = self.bg.get_height()
+                self.screen.blit(self.bg, (self.x_pos_bg, self.y_pos_bg))
+                self.screen.blit(self.bg, (self.x_pos_bg, self.y_pos_bg - image_height))
+                if self.y_pos_bg >= SCREEN_HEIGHT:
+                    self.screen.blit(self.bg, (self.x_pos_bg, self.y_pos_bg - image_height))
+                    self.y_pos_bg = 0
+                self.y_pos_bg += self.game_speed
+        else:  
+            self.screen.blit(self.bg_start, (0, 0))
 
         # Dibuja WP sobre el fondo principal
         wp_images = [WP_1, WP_2, WP_3, WP_4]
@@ -139,9 +155,13 @@ class Game:
     
     def draw_menu(self):
         if self.number_death == 0:
+            self.show_start_menu = True
+            image = pygame.transform.scale(BGSTART, (SCREEN_WIDTH, SCREEN_HEIGHT))
+            self.screen.blit(image, (0, 0))
             text, text_rect = text_utils.get_message('Press the enter key to start', 30, WHITE)
             self.screen.blit(text, text_rect)
         else:
+            self.show_start_menu = False
             text, text_rect = text_utils.get_message('Press the enter key to restart', 30, WHITE)
             score, score_rect = text_utils.get_message(f'Your score is: {self.score}', 30, WHITE, height=SCREEN_HEIGHT//2 + 50)
             max_score, max_score_rect = text_utils.get_message(f'Your maximum score is: {self.max_score}', 30, WHITE, height=SCREEN_HEIGHT//2 + 90)
@@ -150,7 +170,6 @@ class Game:
             self.screen.blit(score, score_rect)
             self.screen.blit(max_score, max_score_rect)
             self.screen.blit(level_handler, level_rect)
-
         
     def score_player(self):
         self.score = self.enemy_handler.number_enemy_destroyed
@@ -188,11 +207,14 @@ class Game:
         self.player.reset()
         self.enemy_handler.reset()
         self.bullet_handler.reset()
-        self.power_handled.reset()
+        self.power_up_handler.reset()
         self.lives.reset()
         self.score = 0
         self.level_handler.reset()
+        self.power_up_handler.reset()
         self.level_handler.current_level_index = self.max_level_reached
+        self.game_started = False  # Restablecer el juego como no iniciado
+        self.show_start_menu = False  # Restablecer la variable del menú de inicio
 
 
 

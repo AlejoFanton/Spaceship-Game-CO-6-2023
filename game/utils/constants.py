@@ -20,6 +20,8 @@ WP_2 = pygame.image.load(os.path.join(IMG_DIR, 'Wallpaper/galaxy_2.png'))
 WP_3 = pygame.image.load(os.path.join(IMG_DIR, 'Wallpaper/planet.png'))
 WP_4 = pygame.image.load(os.path.join(IMG_DIR, 'Wallpaper/planet_2.png'))
 
+BGSTART = pygame.image.load(os.path.join(IMG_DIR, 'Other/StartFond.jpg'))
+
 HEART = pygame.image.load(os.path.join(IMG_DIR, 'Other/SmallHeart.png'))
 
 DEFAULT_TYPE = "default"
@@ -36,8 +38,10 @@ ENEMY_3 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/galactic.png"))
 ENEMY_4 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/droid.png"))
 ENEMY_5 = pygame.image.load(os.path.join(IMG_DIR, "Enemy/stellar.png"))
 
+START = pygame.image.load(os.path.join(IMG_DIR, 'Other/Start.png'))
+
 WHITE = (255, 255, 255)
-BLACK_COLOR = (0, 0, 0)
+BLACK = (0, 0, 0)
 
 FONT_STYLE = 'freesansbold.ttf'
 

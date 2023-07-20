@@ -42,7 +42,7 @@ class LevelHandler:
         current_level = self.get_current_level()
         if self.is_countdown_active:
             countdown_seconds = int(self.countdown_timer / 1000) + 1
-            countdown_text = f"Next level in {countdown_seconds} seconds"
+            countdown_text = f"The next level will start in: {countdown_seconds} segundos"
             text, text_rect = text_utils.get_message(countdown_text, 40, WHITE)
             screen.blit(text,text_rect)
         elif current_level:
