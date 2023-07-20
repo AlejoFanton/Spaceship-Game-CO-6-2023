@@ -1,9 +1,7 @@
 import pygame
-import random
-import pygame.locals as pygame_locals
 
 from game.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
-from game.utils.constants import WP_1, WP_2, WP_3, WP_4, WHITE, BGSTART, START, BLACK
+from game.utils.constants import WP_1, WP_2, WP_3, WP_4, WHITE, BGSTART, START_SOUND, BLACK, LASER_SOUND, POWER_SOUND
 from game.components.spaceship import Spaceship
 from game.components.enemies.enemy_handler import EnemyHandler
 from game.components.Bullets.bullet_handler import BulletHandler
@@ -32,7 +30,7 @@ class Game:
         self.max_score = 0
         self.power_type = DEFAULT_TYPE
         self.power_time = 0
-        self.power_up_handler = PowerUpHandler()
+        self.power_up_handler = PowerUpHandler(self)
         self.level_handler = LevelHandler()
         self.time_next_level = 0
         self.enemies_nex_level = 3
@@ -50,6 +48,10 @@ class Game:
         self.show_start_menu = True
         self.game_started = False
         self.game_over = False
+        self.start_sound = START_SOUND
+        self.sound_played = False
+        self.laser_sound = LASER_SOUND
+        self.power_sound = POWER_SOUND
 
     def run(self):
         # Game loop: events - update - draw
@@ -86,6 +88,11 @@ class Game:
             self.bullet_handler.update(self.player, self.enemy_handler.enemies)
             self.power_up_handler.update(self.player)
             self.score = self.enemy_handler.number_enemy_destroyed
+
+            if not self.sound_played:
+                # Detener el sonido del menú de inicio
+                self.start_sound.stop()
+                self.sound_played = True
             
             if self.level_handler.is_level_completed():  # Cambiar aquí (corregir nombre del método)
                 self.is_countdown_active = True
@@ -158,8 +165,14 @@ class Game:
             self.show_start_menu = True
             image = pygame.transform.scale(BGSTART, (SCREEN_WIDTH, SCREEN_HEIGHT))
             self.screen.blit(image, (0, 0))
+            title, title_text_rect = text_utils.get_message('Interstellar Ship', 50, (255, 255, 0), height=SCREEN_HEIGHT//2 - 200)
+            subtitle, subtitle_text_rect = text_utils.get_message('Saving the Galaxy', 50, (255, 255, 0), height=SCREEN_HEIGHT//2 - 150)
             text, text_rect = text_utils.get_message('Press the enter key to start', 30, WHITE)
+            self.screen.blit(title, title_text_rect)
+            self.screen.blit(subtitle, subtitle_text_rect)
             self.screen.blit(text, text_rect)
+            
+            self.start_sound.play()
         else:
             self.show_start_menu = False
             text, text_rect = text_utils.get_message('Press the enter key to restart', 30, WHITE)

@@ -52,3 +52,9 @@ BOUNCE = "bounce"
 
 BULLET_ENEMY_TYPE = 'enemy'
 BULLET_PLAYER_TYPE = 'ship'
+
+pygame.init()
+pygame.mixer.init()
+START_SOUND = pygame.mixer.Sound('Sound/Sound_Pricipal.mp3')
+LASER_SOUND = pygame.mixer.Sound('Sound/Sounds_Bullet.wav')
+POWER_SOUND = pygame.mixer.Sound('Sound/Sounds_PowerUp.wav')
