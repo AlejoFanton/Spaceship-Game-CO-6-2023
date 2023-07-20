@@ -11,10 +11,12 @@ class LevelHandler:
         self.countdown_timer = 0
         self.countdown_duration = 3000
 
-    def add_level(self, enemy_count):
+    def add_level(self, enemy_count, enemy_handler=None):
+        if enemy_handler is None:
+            enemy_handler = EnemyHandler()
         level = {
             'enemy_count': enemy_count,
-            'enemy_handler': EnemyHandler(),
+            'enemy_handler': enemy_handler,
         }
         self.levels.append(level)
 
@@ -33,8 +35,8 @@ class LevelHandler:
                 self.advance_to_next_level()
         else:
             if current_level:
-                current_level.update(bullet_handler)
-                if current_level.is_level_completed():  # Cambiar aquí
+                current_level['enemy_handler'].update(bullet_handler)
+                if self.is_level_completed():
                     self.is_countdown_active = True
                     self.countdown_timer = self.countdown_duration
 
@@ -42,11 +44,11 @@ class LevelHandler:
         current_level = self.get_current_level()
         if self.is_countdown_active:
             countdown_seconds = int(self.countdown_timer / 1000) + 1
-            countdown_text = f"The next level will start in: {countdown_seconds} segundos"
+            countdown_text = f"The next level will start in: {countdown_seconds} seconds"
             text, text_rect = text_utils.get_message(countdown_text, 40, WHITE)
             screen.blit(text,text_rect)
         elif current_level:
-            current_level.draw(screen)
+            current_level['enemy_handler'].draw(screen)
         
 
     def is_level_completed(self):

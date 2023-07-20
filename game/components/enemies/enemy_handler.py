@@ -76,18 +76,10 @@ class EnemyHandler:
     
     def increase_level(self):
         self.current_level += 1
-        if self.current_level == 2:
-            self.available_ships = [Ship, ShipOvni]
-        elif self.current_level == 3:
-            self.available_ships = [Ship, ShipOvni, ShipGalactic]
-        elif self.current_level == 4:
-            self.available_ships = [Ship, ShipOvni, ShipGalactic, ShipDroid]
-        elif self.current_level == 5:
-            self.available_ships = [Ship, ShipOvni, ShipGalactic, ShipDroid, ShipStellar]
-        elif self.current_level == 6:
-            self.available_ships = [Ship, ShipOvni, ShipGalactic, ShipDroid, ShipStellar]
-        else:
-            if self.current_level > 6:
-                self.available_ships = [Ship, ShipOvni, ShipGalactic, ShipDroid, ShipStellar]
+        max_level = 6
+        if self.current_level > max_level:
+            self.current_level = max_level
+
+        self.available_ships = [Ship, ShipOvni, ShipGalactic, ShipDroid, ShipStellar][:self.current_level]
     
     
